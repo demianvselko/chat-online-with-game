@@ -71,3 +71,21 @@ Clean containers, volumes and local images:
 ```bash
 pnpm docker:down:clean
 ```
+
+### ✅ Instalar dependencias solo en el backend
+
+```bash
+pnpm add -D @types/jest --filter backend
+```
+
+### ✅ Instalar dependencias solo en el frontend
+
+```bash
+pnpm add -D @types/jest --filter frontend
+```
+
+### 📌 ¿Qué pasa si quiero instalar algo en todo el monorepo?
+
+```bash
+pnpm add D @types/jest -w
+```

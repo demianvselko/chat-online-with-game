@@ -26,5 +26,8 @@
   "packageManager": "pnpm@10.20.0",
   "devDependencies": {
     "concurrently": "^9.2.1"
+  },
+  "dependencies": {
+    "@types/jest": "^30.0.0"
   }
 }
