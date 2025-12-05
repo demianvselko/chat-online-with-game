@@ -17,11 +17,37 @@ jobs:
     name: Lint, Test & SonarCloud
     runs-on: ubuntu-latest
 
+    env:
+      BRANCH_NAME: ${{ github.head_ref != '' && github.head_ref || github.ref_name }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Validate branch naming convention
+        shell: bash
+        run: |
+          echo "🔎 Validating branch name: '$BRANCH_NAME'"
+
+          # Ramas permitidas sin validación estricta
+          if [[ "$BRANCH_NAME" =~ ^(main|develop|qa)$ ]]; then
+            echo "✅ '$BRANCH_NAME' is a protected branch. Skipping branch name validation."
+            exit 0
+          fi
+
+          # Regex: <type>/<scope>/<kebab-description>
+          if [[ ! "$BRANCH_NAME" =~ ^(feature|fix|hotfix|chore|docs|refactor|style|test|infra)/(backend|frontend|root|shared) ]]; then
+            echo "❌ Invalid branch name: '$BRANCH_NAME'"
+            echo "Expected pattern: <type>/<scope>/<kebab-case-description>"
+            echo "Examples:"
+            echo "  feature/backend/add-login"
+            echo "  chore/root/add-documentation-in-root"
+            exit 1
+          fi
+
+          echo "✅ Branch name '$BRANCH_NAME' is valid."
 
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
@@ -46,5 +72,5 @@ jobs:
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
-          SONAR_TOKEN: "5ceb9bfc6c43b2af191f1ccdd76918c15641eb05"
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
