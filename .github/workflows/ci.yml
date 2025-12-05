@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - qa
+  pull_request:
+    branches:
+      - main
+      - develop
+      - qa
+
+jobs:
+  ci:
+    name: Lint, Test & SonarCloud
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.20.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint (backend + frontend)
+        run: pnpm lint
+
+      - name: Run tests (CI mode with coverage)
+        run: pnpm test:ci
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          SONAR_TOKEN: "5ceb9bfc6c43b2af191f1ccdd76918c15641eb05"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
