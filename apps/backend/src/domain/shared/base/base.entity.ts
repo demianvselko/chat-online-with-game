@@ -1,5 +1,4 @@
-import { CreatedAtVO } from '../value-objects/createdAt.dto';
-import { UuidVO } from '../value-objects/uuid.vo';
+import { CreatedAtVO, UuidVO } from '../value-objects';
 import { BaseEntityProps } from './base.entity.props';
 
 export abstract class BaseEntity<TProps extends BaseEntityProps> {
