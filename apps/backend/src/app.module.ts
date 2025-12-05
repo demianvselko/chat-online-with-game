@@ -18,4 +18,4 @@ import { ResponseTimeInterceptor } from './infraestructure/http/interceptors/res
   controllers: [AppController],
   providers: [AppService, ResponseTimeInterceptor],
 })
-export class AppModule { }
+export class AppModule {}
