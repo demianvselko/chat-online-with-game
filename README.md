@@ -1,4 +1,5 @@
-Up docker:
+# Up docker
+
 docker compose -f docker-compose.dev.yml up
 
 See logs:
@@ -17,19 +18,19 @@ This repository is a **pnpm monorepo** with two apps:
 pnpm install
 ```
 
-# Run both backend and frontend
+## Run both backend and frontend
 
 ```bash
 pnpm dev
 ```
 
-# Run only the backend
+## Run only the backend
 
 ```bash
 pnpm dev:backend
 ```
 
-# Run only the frontend
+## Run only the frontend
 
 ```bash
 pnpm dev:frontend
@@ -37,15 +38,15 @@ pnpm dev:frontend
 
 Same to build
 
-pnpm build          # builds backend + frontend
-pnpm build:backend  # build backend
+pnpm build # builds backend + frontend
+pnpm build:backend # build backend
 pnpm build:frontend # build frontend
 
-# Production (without Docker)
+## Production (without Docker)
 
 ```bash
 pnpm build
-pnpm start 
+pnpm start
 ```
 
 We use a custom STAGE environment variable to indicate the deployment stage:
@@ -105,3 +106,13 @@ import rateLimit from '@fastify/rate-limit';
 import cors from '@fastify/cors';
 
 pnpm add -D @fastify/cookie @fastify/compress @fastify/rate-limit @fastify/cors --filter backend
+
+RUN SONAR:
+
+```bash
+sonar-scanner \
+  -Dsonar.login=5ceb9bfc6c43b2af191f1ccdd76918c15641eb05 \
+  -Dsonar.projectKey=demianvselko_chat-online-with-game \
+  -Dsonar.organization=demianvselko \
+  -Dsonar.host.url=https://sonarcloud.io`
+```
