@@ -6,8 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint src --ext .ts",
-    "lint:fix": "eslint src --ext .ts --fix"
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "test": "echo \"[frontend] No test runner configured yet\" && exit 0"
   },
   "dependencies": {
     "next": "16.0.7",
