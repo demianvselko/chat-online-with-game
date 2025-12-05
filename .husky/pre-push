@@ -1,0 +1,31 @@
+BRANCH_NAME="$(git rev-parse --abbrev-ref HEAD)"
+
+echo "🔎 Validating branch name before push: '$BRANCH_NAME'"
+
+case "$BRANCH_NAME" in
+  main|develop|qa)
+    echo "✅ '$BRANCH_NAME' is a protected branch. Skipping branch name validation."
+    exit 0
+    ;;
+esac
+
+PATTERN='^(feat|fix|hotfix|test|docs|chore|refactor|style|ci|cd|performance|infra)/(backend|frontend|root)/[a-z0-9-]+$'
+
+if ! echo "$BRANCH_NAME" | grep -Eq "$PATTERN"; then
+  echo "❌ Invalid branch name: '$BRANCH_NAME'"
+  echo "Expected pattern: <type>/<scope>/<kebab-case-description>"
+  echo ""
+  echo "Allowed types: feat, fix, hotfix, test, docs, chore, refactor, style, ci, cd, performance, infra"
+  echo "Allowed scopes: backend, frontend, root"
+  echo ""
+  echo "Examples:"
+  echo "  feat/backend/add-entity-base"
+  echo "  chore/root/add-git-workflows"
+  echo "  fix/frontend/login-validation"
+  echo ""
+  echo "💡 Rename your branch, e.g.:"
+  echo "    git branch -m feat/backend/add-entity-base"
+  exit 1
+fi
+
+echo "✅ Branch name '$BRANCH_NAME' is valid. Proceeding with push."

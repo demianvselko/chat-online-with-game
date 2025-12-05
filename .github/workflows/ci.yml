@@ -38,12 +38,17 @@ jobs:
           fi
 
           # Regex: <type>/<scope>/<kebab-description>
-          if [[ ! "$BRANCH_NAME" =~ ^(feature|fix|hotfix|chore|docs|refactor|style|test|infra)/(backend|frontend|root|shared) ]]; then
+          if [[ ! "$BRANCH_NAME" =~ ^(feat|fix|hotfix|test|docs|chore|refactor|style|ci|cd|performance|infra)/(backend|frontend|root)/[a-z0-9-]+$ ]]; then
             echo "❌ Invalid branch name: '$BRANCH_NAME'"
             echo "Expected pattern: <type>/<scope>/<kebab-case-description>"
+            echo ""
+            echo "Allowed types: feat, fix, hotfix, test, docs, chore, refactor, style, ci, cd, performance, infra"
+            echo "Allowed scopes: backend, frontend, root"
+            echo ""
             echo "Examples:"
-            echo "  feature/backend/add-login"
-            echo "  chore/root/add-documentation-in-root"
+            echo "  feat/backend/add-entity-base"
+            echo "  chore/root/add-git-workflows"
+            echo "  fix/frontend/login-validation"
             exit 1
           fi
 
