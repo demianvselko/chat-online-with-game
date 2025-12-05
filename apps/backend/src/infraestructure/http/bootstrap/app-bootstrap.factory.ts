@@ -1,22 +1,23 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { NestFactory } from '@nestjs/core';
+
 import helmet from '@fastify/helmet';
 import cookie from '@fastify/cookie';
 import compress from '@fastify/compress';
 import rateLimit from '@fastify/rate-limit';
-import { ConfigService } from '@nestjs/config';
 
-import { AppModule } from '../../../app.module';
-import { setupSwagger } from '../config/swagger.config';
-import type { AppConfig } from '../config/app.config';
-import { ResponseTimeInterceptor } from '../interceptors/response-time.interceptor';
+import { AppModule } from '@app/app.module';
+import { setupSwagger } from '@http/config/swagger.config';
+import type { AppConfig } from '@http/config/app.config';
+import { ResponseTimeInterceptor } from '@http/interceptors/response-time.interceptor';
 
 export class AppBootstrapFactory {
-  static async create(): Promise<NestFastifyApplication & INestApplication> {
+  static async create(): Promise<NestFastifyApplication> {
     const fastifyAdapter = new FastifyAdapter({
       logger: false,
       trustProxy: true,
@@ -26,6 +27,9 @@ export class AppBootstrapFactory {
       AppModule,
       fastifyAdapter,
     );
+
+    app.setGlobalPrefix('v1');
+    app.enableShutdownHooks();
 
     await this.registerPlugins(app);
     this.configurePipes(app);
@@ -39,6 +43,9 @@ export class AppBootstrapFactory {
   private static async registerPlugins(
     app: NestFastifyApplication,
   ): Promise<void> {
+    const configService = app.get(ConfigService);
+    const appConfig = configService.get<AppConfig>('app');
+
     await app.register(helmet, {
       contentSecurityPolicy: false,
     });
@@ -51,9 +58,10 @@ export class AppBootstrapFactory {
     });
 
     await app.register(compress);
+
     await app.register(rateLimit, {
-      max: 100,
-      timeWindow: '1 minute',
+      max: appConfig?.rateLimit.max ?? 100,
+      timeWindow: appConfig?.rateLimit.timeWindow ?? '1 minute',
     });
   }
 

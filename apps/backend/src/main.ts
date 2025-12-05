@@ -1,8 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { AppBootstrapFactory } from './infraestructure/http/bootstrap/app-bootstrap.factory';
-import type { AppConfig } from './infraestructure/http/config/app.config';
+import { AppBootstrapFactory } from '@http/bootstrap/app-bootstrap.factory';
+import type { AppConfig } from '@http/config/app.config';
 
 async function bootstrap(): Promise<void> {
   const logger = new Logger('Bootstrap');
@@ -25,6 +25,7 @@ async function bootstrap(): Promise<void> {
 }
 
 bootstrap().catch((error: unknown) => {
-  console.error('Fatal error on bootstrap', error);
+  const logger = new Logger('Bootstrap');
+  logger.error('Fatal error on bootstrap', error as Error);
   process.exit(1);
 });

@@ -1,21 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-
-import { appConfig } from './infraestructure/http/config/app.config';
-import { ResponseTimeInterceptor } from './infraestructure/http/interceptors/response-time.interceptor';
+import { appConfig } from '@http/config/app.config';
+import { HealthController } from '@http/controllers/health.controller';
+import { ResponseTimeInterceptor } from '@http/interceptors/response-time.interceptor';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig],
-      envFilePath: '.env',
+      envFilePath: [`.env.${process.env.NODE_ENV ?? 'development'}`, '.env'],
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService, ResponseTimeInterceptor],
+  controllers: [HealthController],
+  providers: [ResponseTimeInterceptor],
 })
 export class AppModule {}
