@@ -28,6 +28,7 @@
     "test": "pnpm test:backend && pnpm test:frontend",
     "test:backend": "pnpm --filter backend test",
     "test:frontend": "pnpm --filter frontend test",
+    "test:ci": "pnpm --filter backend test:cov && pnpm --filter frontend test",
     "prepare": "husky"
   },
   "keywords": [],
