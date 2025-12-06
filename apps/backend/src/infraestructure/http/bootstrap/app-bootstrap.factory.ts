@@ -13,8 +13,9 @@ import rateLimit from '@fastify/rate-limit';
 
 import { AppModule } from '@app/app.module';
 import { setupSwagger } from '@http/config/swagger.config';
-import type { AppConfig } from '@http/config/app.config';
 import { ResponseTimeInterceptor } from '@http/interceptors/response-time.interceptor';
+import { buildRateLimitOptions, ensureAppConfig } from './http-config';
+import type { AppConfig } from '@http/config/app.config';
 
 export class AppBootstrapFactory {
   static async create(): Promise<NestFastifyApplication> {
@@ -59,10 +60,8 @@ export class AppBootstrapFactory {
 
     await app.register(compress);
 
-    await app.register(rateLimit, {
-      max: appConfig?.rateLimit.max ?? 100,
-      timeWindow: appConfig?.rateLimit.timeWindow ?? '1 minute',
-    });
+    const rateLimitOptions = buildRateLimitOptions(appConfig);
+    await app.register(rateLimit, rateLimitOptions);
   }
 
   private static configurePipes(app: INestApplication): void {
@@ -84,11 +83,8 @@ export class AppBootstrapFactory {
 
   private static configureCors(app: INestApplication): void {
     const configService = app.get(ConfigService);
-    const appConfig = configService.get<AppConfig>('app');
-
-    if (!appConfig) {
-      throw new Error('App configuration could not be loaded for CORS');
-    }
+    const rawAppConfig = configService.get<AppConfig>('app');
+    const appConfig = ensureAppConfig(rawAppConfig);
 
     app.enableCors({
       origin: appConfig.frontendUrl,
