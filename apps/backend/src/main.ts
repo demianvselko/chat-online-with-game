@@ -23,6 +23,7 @@ export async function bootstrap(): Promise<void> {
   logger.log(`Backend started at ${url}`);
 }
 
+/* istanbul ignore next */
 if (require.main === module) {
   bootstrap().catch((error: unknown) => {
     const logger = new Logger('Bootstrap');
