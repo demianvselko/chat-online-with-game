@@ -17,6 +17,7 @@
     "baseUrl": "./",
     "paths": {
       "@app/*": ["src/*"],
+      "@domain/*": ["src/domain/*"],
       "@infra/*": ["src/infraestructure/*"],
       "@http/*": ["src/infraestructure/http/*"],
       "@mocks/*": ["test/__mocks__/*"]
