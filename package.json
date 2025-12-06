@@ -29,7 +29,7 @@
     "test:backend": "pnpm --filter backend test",
     "test:backend:cov": "pnpm --filter backend test:cov",
     "test:frontend": "pnpm --filter frontend test",
-    "test:ci": "echo \"[frontend] No test runner configured yet\" && exit 0",
+    "test:ci": "pnpm --filter backend test:cov",
     "ci:local": "pnpm lint && pnpm test:ci && pnpm sonar:local",
     "sonar:local": "sonar-scanner",
     "prepare": "husky"
