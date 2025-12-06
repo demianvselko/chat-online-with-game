@@ -13,14 +13,10 @@ const config: Config = {
     '^@app/(.*)$': '<rootDir>/src/$1',
     '^@infra/(.*)$': '<rootDir>/src/infraestructure/$1',
     '^@http/(.*)$': '<rootDir>/src/infraestructure/http/$1',
+    '^@mocks/(.*)$': '<rootDir>/test/__mocks__/$1',
   },
   collectCoverageFrom: ['src/**/*.ts'],
   coverageDirectory: 'coverage',
-  globals: {
-    'ts-jest': {
-      tsconfig: 'tsconfig.spec.json',
-    },
-  },
 };
 
 export default config;

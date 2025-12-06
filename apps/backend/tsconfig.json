@@ -18,7 +18,8 @@
     "paths": {
       "@app/*": ["src/*"],
       "@infra/*": ["src/infraestructure/*"],
-      "@http/*": ["src/infraestructure/http/*"]
+      "@http/*": ["src/infraestructure/http/*"],
+      "@mocks/*": ["test/__mocks__/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
