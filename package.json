@@ -7,7 +7,8 @@
     "dev": "concurrently -n backend,frontend -c cyan,magenta \"pnpm dev:backend\" \"pnpm dev:frontend\"",
     "dev:backend": "pnpm --filter backend start:dev",
     "dev:frontend": "pnpm --filter frontend dev",
-    "build": "pnpm build:backend && pnpm build:frontend",
+    "build": "pnpm build:shared && pnpm build:backend && pnpm build:frontend",
+    "build:shared": "pnpm --filter @shared/core build",
     "build:backend": "pnpm --filter backend build",
     "build:frontend": "pnpm --filter frontend build",
     "start": "pnpm start:backend & pnpm start:frontend",
@@ -19,13 +20,16 @@
     "docker:up": "docker compose up -d --build",
     "docker:down": "docker compose down",
     "docker:down:clean": "docker compose down -v --rmi local",
-    "lint": "pnpm lint:backend && pnpm lint:frontend",
+    "lint": "pnpm lint:shared && pnpm lint:backend && pnpm lint:frontend",
+    "lint:shared": "pnpm --filter @shared/core lint",
     "lint:backend": "pnpm --filter backend lint",
     "lint:frontend": "pnpm --filter frontend lint",
-    "lint:fix": "pnpm lint:fix:backend && pnpm lint:fix:frontend",
+    "lint:fix": "pnpm lint:fix:shared && pnpm lint:fix:backend && pnpm lint:fix:frontend",
+    "lint:fix:shared": "pnpm --filter @shared/core lint:fix",
     "lint:fix:backend": "pnpm --filter backend lint:fix",
     "lint:fix:frontend": "pnpm --filter frontend lint:fix",
-    "test": "pnpm test:backend && pnpm test:frontend",
+    "test": "pnpm test:shared && pnpm test:backend && pnpm test:frontend",
+    "test:shared": "pnpm --filter @shared/core test",
     "test:backend": "pnpm --filter backend test",
     "test:backend:cov": "pnpm --filter backend test:cov",
     "test:frontend": "pnpm --filter frontend test",
@@ -41,13 +45,17 @@
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
+    "@eslint/js": "^9.39.1",
     "concurrently": "^9.2.1",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.5.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "prettier": "^3.7.4"
+    "prettier": "^3.7.4",
+    "typescript-eslint": "^8.48.1"
   },
   "dependencies": {
     "@types/jest": "^30.0.0",
@@ -55,11 +63,15 @@
   },
   "lint-staged": {
     "apps/backend/**/*.{ts,js}": [
-      "pnpm -F @app/backend run lint:fix",
+      "pnpm -F backend run lint:fix",
       "prettier -w"
     ],
     "apps/frontend/**/*.{ts,tsx,js,jsx}": [
-      "pnpm -F @app/frontend run lint:fix",
+      "pnpm -F frontend run lint:fix",
+      "prettier -w"
+    ],
+    "packages/shared/**/*.{ts,tsx,js,jsx}": [
+      "pnpm -F @shared/core run lint:fix",
       "prettier -w"
     ],
     "*.{json,md,yml,yaml,css,scss,html}": [
