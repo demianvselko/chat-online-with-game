@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const AccessTokenSchema = z.string().min(10);
 export const RefreshTokenSchema = z.string().min(10);
