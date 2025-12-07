@@ -12,7 +12,7 @@ import cookie from '@fastify/cookie';
 import compress from '@fastify/compress';
 import rateLimit from '@fastify/rate-limit';
 
-import { AppModule } from '@app/app.module';
+import { AppModule } from '@src/app.module';
 import { ResponseTimeInterceptor } from '@http/interceptors/response-time.interceptor';
 import type { AppConfig } from '@http/config/app.config';
 import { setupSwagger } from '@http/config/swagger.config';

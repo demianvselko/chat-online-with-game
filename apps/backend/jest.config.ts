@@ -10,7 +10,7 @@ const config: Config = {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
   moduleNameMapper: {
-    '^@app/(.*)$': '<rootDir>/src/$1',
+    '^@src/(.*)$': '<rootDir>/src/$1',
     '^@domain/(.*)$': '<rootDir>/src/domain/$1',
     '^@infra/(.*)$': '<rootDir>/src/infraestructure/$1',
     '^@http/(.*)$': '<rootDir>/src/infraestructure/http/$1',
