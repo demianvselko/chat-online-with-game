@@ -50,7 +50,8 @@
     "prettier": "^3.7.4"
   },
   "dependencies": {
-    "@types/jest": "^30.0.0"
+    "@types/jest": "^30.0.0",
+    "zod": "^3.25.76"
   },
   "lint-staged": {
     "apps/backend/**/*.{ts,js}": [

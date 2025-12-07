@@ -22,7 +22,7 @@ module.exports = {
     "scope-enum": [
       2,
       "always",
-      ["backend", "frontend", "root"],
+      ["backend", "frontend", "root", "shared"],
     ],
     "scope-empty": [2, "never"],
     "subject-empty": [2, "never"],

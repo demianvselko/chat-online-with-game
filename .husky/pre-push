@@ -9,14 +9,14 @@ case "$BRANCH_NAME" in
     ;;
 esac
 
-PATTERN='^(feat|fix|hotfix|test|docs|chore|refactor|style|ci|cd|performance|infra)/(backend|frontend|root)/[a-z0-9-]+$'
+PATTERN='^(feat|fix|hotfix|test|docs|chore|refactor|style|ci|cd|performance|infra)/(backend|frontend|root|shared)/[a-z0-9-]+$'
 
 if ! echo "$BRANCH_NAME" | grep -Eq "$PATTERN"; then
   echo "❌ Invalid branch name: '$BRANCH_NAME'"
   echo "Expected pattern: <type>/<scope>/<kebab-case-description>"
   echo ""
   echo "Allowed types: feat, fix, hotfix, test, docs, chore, refactor, style, ci, cd, performance, infra"
-  echo "Allowed scopes: backend, frontend, root"
+  echo "Allowed scopes: backend, frontend, root, shared"
   echo ""
   echo "Examples:"
   echo "  feat/backend/add-entity-base"
