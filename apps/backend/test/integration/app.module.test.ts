@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 
-import { AppModule } from '@app/app.module';
+import { AppModule } from '@src/app.module';
 import type { AppConfig } from '@http/config/app.config';
 import { HealthController } from '@http/controllers/health.controller';
 import { ResponseTimeInterceptor } from '@http/interceptors/response-time.interceptor';

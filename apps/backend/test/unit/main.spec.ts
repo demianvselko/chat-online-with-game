@@ -11,7 +11,7 @@ import {
   type ConfigServiceMock,
   asConfigServiceInstance,
 } from '@mocks/config-service.mock';
-import { bootstrap } from '@app/main';
+import { bootstrap } from '@src/main';
 
 jest.mock('@http/bootstrap/app-bootstrap.factory', () => ({
   AppBootstrapFactory: {
