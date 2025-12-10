@@ -1,6 +1,6 @@
 import { BaseEntity } from '@domain/shared/base/base.entity';
 import type { BaseEntityProps } from '@domain/shared/base/base.entity.props';
-import { DomainError } from '@domain/shared/errors/domain-errors';
+import { expectDomainError } from '@test/utils/expect-domain-error';
 
 interface TestEntityProps extends BaseEntityProps {
   name: string;
@@ -10,9 +10,11 @@ class TestEntity extends BaseEntity<TestEntityProps> {
   private constructor(props: TestEntityProps, id?: string) {
     super(props, id);
   }
+
   static create(props: TestEntityProps, id?: string): TestEntity {
     return new TestEntity(props, id);
   }
+
   get name(): string {
     return this.props.name;
   }
@@ -44,6 +46,7 @@ describe('BaseEntity', () => {
 
   it('should normalize createdAt to a Date instance', () => {
     const createdAt = new Date('2021-02-03T04:05:06.000Z');
+
     const props: TestEntityProps = {
       name: 'Alice',
       createdAt,
@@ -76,19 +79,51 @@ describe('BaseEntity', () => {
     expect(entity.isActive).toBe(false);
   });
 
+  it('should default updatedAt to null when not provided', () => {
+    const props: TestEntityProps = {
+      name: 'Dave',
+      createdAt: new Date('2021-02-03T04:05:06.000Z'),
+    };
+    const entity = TestEntity.create(props);
+    expect(entity.updatedAt).toBeNull();
+  });
+
+  it('should use provided updatedAt when passed in props', () => {
+    const updatedAt = new Date('2022-01-01T00:00:00.000Z');
+
+    const props: TestEntityProps = {
+      name: 'Eve',
+      createdAt: new Date('2021-02-03T04:05:06.000Z'),
+      updatedAt,
+    };
+    const entity = TestEntity.create(props);
+    expect(entity.updatedAt).toBeInstanceOf(Date);
+    expect(entity.updatedAt!.toISOString()).toBe(updatedAt.toISOString());
+  });
+
+  it('should update updatedAt when updateTimestamp is called', () => {
+    const props: TestEntityProps = {
+      name: 'Frank',
+      createdAt: new Date('2021-02-03T04:05:06.000Z'),
+    };
+    const entity = TestEntity.create(props);
+    expect(entity.updatedAt).toBeNull();
+    const newDate = new Date('2023-05-10T12:00:00.000Z');
+    entity.updateTimestamp(newDate);
+    expect(entity.updatedAt).toBeInstanceOf(Date);
+    expect(entity.updatedAt!.toISOString()).toBe(newDate.toISOString());
+  });
+
   it('should throw DomainError when id is not a valid UUID', () => {
     const props: TestEntityProps = {
       name: 'Invalid',
       createdAt: new Date('2021-02-03T04:05:06.000Z'),
     };
-    expect(() => TestEntity.create(props, 'invalid-id')).toThrow(DomainError);
-    try {
-      TestEntity.create(props, 'invalid-id');
-    } catch (e) {
-      const err = e as DomainError;
-      expect(err.code).toBe('INVALID_UUID');
-      expect(err.context).toBeDefined();
-      expect(err.context!.id).toBe('invalid-id');
-    }
+
+    expectDomainError(
+      () => TestEntity.create(props, 'invalid-id'),
+      'INVALID_UUID',
+      { id: 'invalid-id' },
+    );
   });
 });

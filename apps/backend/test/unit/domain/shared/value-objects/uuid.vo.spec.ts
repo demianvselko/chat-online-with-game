@@ -1,5 +1,5 @@
 import { UuidVO } from '@domain/shared/value-objects/uuid.vo';
-import { DomainError } from '@domain/shared/errors/domain-errors';
+import { expectDomainError } from '@test/utils/expect-domain-error';
 
 describe('UuidVO', () => {
   it('should create a valid UUID when passing a correct UUIDv4 string', () => {
@@ -16,15 +16,9 @@ describe('UuidVO', () => {
   });
 
   it('should throw DomainError when value is not a valid UUIDv4', () => {
-    expect(() => UuidVO.create('invalid-uuid')).toThrow(DomainError);
-    try {
-      UuidVO.create('invalid-uuid');
-    } catch (e) {
-      const err = e as DomainError;
-      expect(err.code).toBe('INVALID_UUID');
-      expect(err.context).toBeDefined();
-      expect(err.context!.id).toBe('invalid-uuid');
-    }
+    expectDomainError(() => UuidVO.create('invalid-uuid'), 'INVALID_UUID', {
+      id: 'invalid-uuid',
+    });
   });
 
   it('should keep the exact same UUID passed in input', () => {
