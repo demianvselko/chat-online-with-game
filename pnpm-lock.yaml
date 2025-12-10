@@ -114,6 +114,9 @@ importers:
       "@fastify/rate-limit":
         specifier: ^10.3.0
         version: 10.3.0
+      "@jest/types":
+        specifier: ^30.2.0
+        version: 30.2.0
       "@nestjs/cli":
         specifier: ^11.0.0
         version: 11.0.14(@types/node@22.19.1)
