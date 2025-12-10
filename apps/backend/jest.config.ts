@@ -15,9 +15,10 @@ const config: Config.InitialOptions = {
     '^@infra/(.*)$': '<rootDir>/src/infrastructure/$1',
     '^@http/(.*)$': '<rootDir>/src/infrastructure/http/$1',
     '^@mocks/(.*)$': '<rootDir>/test/__mocks__/$1',
+    '^@test/utils/(.*)$': '<rootDir>/test/utils/$1',
   },
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.ts'],
+  collectCoverageFrom: ['src/**/*.(t|j)s', '!src/**/index.ts'],
   coverageReporters: ['text', 'lcov'],
   coverageDirectory: 'coverage',
   coverageThreshold: {
