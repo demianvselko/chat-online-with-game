@@ -1,4 +1,4 @@
-import { CreatedAtVO, UuidVO } from '../value-objects';
+import { CreatedAtVO, UuidVO, UpdatedAtVO } from '../value-objects';
 import { BaseEntityProps } from './base.entity.props';
 
 export abstract class BaseEntity<TProps extends BaseEntityProps> {
@@ -13,6 +13,7 @@ export abstract class BaseEntity<TProps extends BaseEntityProps> {
     this.props = {
       ...props,
       createdAt,
+      updatedAt: props.updatedAt ?? null,
       isActive: props.isActive ?? true,
     };
   }
@@ -23,6 +24,9 @@ export abstract class BaseEntity<TProps extends BaseEntityProps> {
 
   get createdAt(): Date {
     return this.props.createdAt as Date;
+  }
+  get updatedAt(): Date | null {
+    return this.props.updatedAt ?? null;
   }
 
   get isActive(): boolean {
@@ -35,5 +39,9 @@ export abstract class BaseEntity<TProps extends BaseEntityProps> {
 
   deactivate(): void {
     this.props.isActive = false;
+  }
+
+  updateTimestamp(date: Date): void {
+    this.props.updatedAt = UpdatedAtVO.create(date).value;
   }
 }
