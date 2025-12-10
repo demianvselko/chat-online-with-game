@@ -188,3 +188,11 @@ export SONAR_TOKEN=${SONAR_TOKEN}
 ```bash
 pnpm ci:local
 ```
+
+## Install new dependencies into proyect
+
+```bash
+Example for add  a library @jest/types into backend
+
+pnpm add -D @jest/types --filter backend
+```
