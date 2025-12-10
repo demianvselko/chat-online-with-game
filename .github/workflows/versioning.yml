@@ -1,0 +1,125 @@
+name: Versioning
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  bump-version:
+    name: Bump package version based on branch
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    env:
+      BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.20.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Decide bump type and target package
+        id: decide
+        shell: bash
+        run: |
+          echo "🔎 PR head branch: '$BRANCH_NAME'"
+
+          REGEX='^(feat|fix|hotfix|test|docs|chore|refactor|style|ci|cd|performance|infra)/(backend|frontend|root|shared)/[a-z0-9-]+$'
+
+          if [[ ! "$BRANCH_NAME" =~ $REGEX ]]; then
+            echo "⚠️ Branch '$BRANCH_NAME' does not match pattern. Skipping version bump."
+            echo "no_bump=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          TYPE="${BASH_REMATCH[1]}"
+          SCOPE="${BASH_REMATCH[2]}"
+
+          echo "✅ Branch type: $TYPE"
+          echo "✅ Branch scope: $SCOPE"
+
+          # Decidir nivel de bump
+          BUMP=""
+          case "$TYPE" in
+            feat)
+              BUMP="minor"
+              ;;
+            fix|hotfix|refactor|performance)
+              BUMP="patch"
+              ;;
+            *)
+              echo "ℹ️ Type '$TYPE' does not trigger version bump."
+              echo "no_bump=true" >> $GITHUB_OUTPUT
+              exit 0
+              ;;
+          esac
+
+          # Decidir qué package filtrar
+          FILTER=""
+          case "$SCOPE" in
+            backend)
+              FILTER="backend"
+              ;;
+            frontend)
+              FILTER="frontend"
+              ;;
+            shared)
+              FILTER="@shared/core"
+              ;;
+            root)
+              FILTER="" # root
+              ;;
+          esac
+
+          echo "no_bump=false" >> $GITHUB_OUTPUT
+          echo "bump=$BUMP" >> $GITHUB_OUTPUT
+          echo "filter=$FILTER" >> $GITHUB_OUTPUT
+
+          echo "📦 Will bump '$FILTER' with level '$BUMP'"
+
+      - name: Bump version with pnpm
+        if: steps.decide.outputs.no_bump == 'false'
+        shell: bash
+        run: |
+          BUMP="${{ steps.decide.outputs.bump }}"
+          FILTER="${{ steps.decide.outputs.filter }}"
+
+          echo "🚀 Bumping version: level='$BUMP', filter='$FILTER'"
+
+          if [[ -z "$FILTER" ]]; then
+            # root package.json
+            pnpm version "$BUMP"
+          else
+            pnpm --filter "$FILTER" version "$BUMP"
+          fi
+
+      - name: Push commit and tags
+        if: steps.decide.outputs.no_bump == 'false'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # pnpm version ya crea commit y tag; solo empujamos
+          echo "📤 Pushing commit and tags to origin..."
+          git push --follow-tags
