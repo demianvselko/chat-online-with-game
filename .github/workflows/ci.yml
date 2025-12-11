@@ -69,7 +69,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint (backend + frontend)
-        run: pnpm lint
+        run: pnpm lint:fix
 
       - name: Run tests (CI mode with coverage)
         run: pnpm test:ci
