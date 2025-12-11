@@ -1,9 +1,11 @@
 import type { UserProfileProps } from './props/user-profile.props';
 import { UrlVO } from '../../shared/value-objects/url.vo';
-import { FirstNameVO } from './value-objects/first-name.vo';
-import { LastNameVO } from './value-objects/last-name.vo';
-import { DisplayNameVO } from './value-objects/display-name.vo';
-import { DateOfBirthVO } from './value-objects';
+import {
+  FirstNameVO,
+  LastNameVO,
+  DisplayNameVO,
+  DateOfBirthVO,
+} from './value-objects';
 
 export class UserProfile {
   private readonly props: UserProfileProps;
