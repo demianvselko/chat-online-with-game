@@ -12,14 +12,12 @@ export class UserEntity extends BaseEntity<UserEntityProps> {
       ...props,
       profile: profile.toProps(),
     };
-
     super(finalProps, id);
   }
 
   static create(props: UserEntityProps, id?: string): UserEntity {
     const email = EmailVO.create(props.email);
     const locale = LocaleVO.create(props.localeSettings.locale);
-
     const normalizedProps: UserEntityProps = {
       ...props,
       email: email.value,
@@ -29,7 +27,6 @@ export class UserEntity extends BaseEntity<UserEntityProps> {
       },
       username: props.username.trim(),
     };
-
     return new UserEntity(normalizedProps, id);
   }
 
@@ -67,19 +64,15 @@ export class UserEntity extends BaseEntity<UserEntityProps> {
 
   removeRole(role: UserRole): void {
     this.ensureActive();
-
     if (!this.props.roles.includes(role)) {
       return;
     }
-
     const remainingRoles = this.props.roles.filter((r) => r !== role);
-
     if (remainingRoles.length === 0) {
       throw new UserDomainError('USER_MUST_HAVE_AT_LEAST_ONE_ROLE', {
         userId: this.id,
       });
     }
-
     this.props.roles = remainingRoles;
   }
 
@@ -108,7 +101,6 @@ export class UserEntity extends BaseEntity<UserEntityProps> {
         userId: this.id,
       });
     }
-
     this.props.isActive = true;
   }
 
@@ -118,7 +110,6 @@ export class UserEntity extends BaseEntity<UserEntityProps> {
         userId: this.id,
       });
     }
-
     this.props.isActive = false;
   }
 

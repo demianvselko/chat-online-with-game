@@ -57,8 +57,8 @@ export function buildInactiveUser(
 ): UserEntity {
   return UserEntity.create(
     makeUserEntityProps({
-      isActive: false,
       ...override,
+      isActive: false,
     }),
   );
 }
