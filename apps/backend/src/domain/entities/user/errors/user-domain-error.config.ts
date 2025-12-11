@@ -19,6 +19,8 @@ export const UserDomainErrorsConfig = {
 
   DATE_OF_BIRTH_IN_FUTURE: 'Date of birth cannot be in the future.',
   DATE_OF_BIRTH_INVALID: 'Date of birth is not a valid date.',
+
+  USER_NOT_FOUND: 'User not found.',
 } as const;
 
 export type UserDomainErrorCode = keyof typeof UserDomainErrorsConfig;
